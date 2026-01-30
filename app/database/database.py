@@ -3,12 +3,17 @@ from pathlib import Path
 
 ROOT_PATH = Path(__file__).parent
 
-conexao = sqlite3.connect(ROOT_PATH / "empresa.db")
 
-cursor = conexao.cursor()
+def conexao_db():
+    conexao = sqlite3.connect(ROOT_PATH / "empresa.db")
+    cursor = conexao.cursor()
+    # Foring Key não ariva sozinha
+    conexao.execute("PRAGMA foreign_keys = ON")
+    return conexao, cursor
 
 
-def criar_tabela_empresa(cursor, conexao):
+def criar_tabelas(cursor, conexao):
+    # Primary key vem antes no autoincrement
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS Empresa(
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -16,13 +21,7 @@ def criar_tabela_empresa(cursor, conexao):
         )
         """
     )
-    conexao.commit()
 
-
-# Primary key vem antes no autoincrement
-
-
-def criar_tabela_funcionario(cursor, conexao):
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS funcionario(
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -34,7 +33,4 @@ def criar_tabela_funcionario(cursor, conexao):
         """
     )
     conexao.commit()
-
-
-criar_tabela_empresa(cursor, conexao)
-criar_tabela_funcionario(cursor, conexao)
+    conexao.close()

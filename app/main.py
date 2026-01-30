@@ -1,3 +1,7 @@
+from fastapi import FastAPI
+from database.database import criar_tabelas, conexao_db
+
+
 class Empresa:
     def __init__(self, nome):
         self.nome = nome
