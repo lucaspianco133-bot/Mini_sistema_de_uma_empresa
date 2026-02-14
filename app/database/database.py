@@ -7,12 +7,14 @@ ROOT_PATH = Path(__file__).parent
 def conexao_db():
     conexao = sqlite3.connect(ROOT_PATH / "empresa.db")
     cursor = conexao.cursor()
+    conexao.row_factory = sqlite3.Row
     # Foring Key não ariva sozinha
     conexao.execute("PRAGMA foreign_keys = ON")
     return conexao, cursor
 
 
-def criar_tabelas(cursor, conexao):
+def criar_tabelas():
+    cursor, conexao = conexao
     # Primary key vem antes no autoincrement
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS Empresa(
